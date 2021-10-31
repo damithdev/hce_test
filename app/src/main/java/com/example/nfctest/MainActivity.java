@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
             }
         });
+        startService(intent);
+
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {

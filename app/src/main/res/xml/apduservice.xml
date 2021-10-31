@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/servicedesc"
-    android:requireDeviceUnlock="false">
+    android:requireDeviceUnlock="true"
+    android:apduServiceBanner="@mipmap/ic_launcher">
     <aid-group android:description="@string/aiddescription"
         android:category="payment">
-        <aid-filter android:name="A000000333010101"/>
+
+        <!-- "2PAY.SYS.DDF01" is the name below in hex -->
+        <aid-filter android:name="325041592E5359532E4444463031" android:description="@string/PPSE"/>
+
+        <!-- VISA MSD AID -->
+        <aid-filter android:name="A0000000651010" android:description="@string/Visa"/>
     </aid-group>
 </host-apdu-service>
