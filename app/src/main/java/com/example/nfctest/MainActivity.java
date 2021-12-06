@@ -1,17 +1,24 @@
 package com.example.nfctest;
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.nfctest.hce.HostCardEmulatorService;
+import com.example.nfctest.hce.util.StaticEntry;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -21,13 +28,17 @@ import com.example.nfctest.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-
+    private TextView textViewLog;
+    private TextView textViewStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,26 +52,43 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         Intent intent = new Intent(MainActivity.this, HostCardEmulatorService.class);
+        textViewLog = (TextView) findViewById(R.id.textview_first);
+        textViewLog.setText("====COMMAND LOG==== \n");
+
+        textViewStatus = (TextView) findViewById(R.id.textview_service_state);
+        textViewStatus.setText("PENDING");
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isMyServiceRunning(HostCardEmulatorService.class)){
-                    stopService(intent);
-                    Toast.makeText(getApplicationContext(),"Service Stopped",Toast.LENGTH_LONG).show();
+                    stopNFCService(intent);
                 }else{
-                    startService(intent);
-                    Toast.makeText(getApplicationContext(),"Service Started",Toast.LENGTH_LONG).show();
-
+                    startNFCService(intent);
                 }
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
-        startService(intent);
+        startNFCService(intent);
 
     }
+
+    private void startNFCService(Intent intent){
+        startService(intent);
+        Toast.makeText(getApplicationContext(),"Service Started",Toast.LENGTH_SHORT).show();
+        binding.fab.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+        textViewStatus.setText("Service Running");
+        textViewStatus.setBackgroundColor(Color.GREEN);
+    }
+
+    private void stopNFCService(Intent intent){
+        stopService(intent);
+        Toast.makeText(getApplicationContext(),"Service Stopped",Toast.LENGTH_SHORT).show();
+        binding.fab.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+        textViewStatus.setText("Service Stopped");
+        textViewStatus.setBackgroundColor(Color.RED);
+
+    }
+
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -99,5 +127,29 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(messageReceiver, new IntentFilter("my-message"));
+    }
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Extract data included in the Intent
+            String log = intent.getStringExtra("log-msg");
+            Log.d(TAG,log);
+
+            if(textViewLog != null)textViewLog.append("\n \n"+log);
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        super.onPause();
     }
 }

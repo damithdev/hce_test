@@ -6,23 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        android:textAlignment="center"
+        tools:layout_editor_absoluteY="-127dp">
     <TextView
         android:id="@+id/textview_first"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_first_fragment"
-        app:layout_constraintBottom_toTopOf="@id/button_first"
+        android:text=""
+        android:textStyle="bold|italic"
+        android:fontFamily="sans-serif-medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_first"
-        android:layout_width="wrap_content"
+    </ScrollView>
+    <TextView
+        android:id="@+id/textview_service_state"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/next"
+        android:fontFamily="sans-serif-medium"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

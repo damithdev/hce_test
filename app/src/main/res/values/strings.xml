@@ -13,4 +13,5 @@
     <string name="aiddescription">AID Description</string>
     <string name="PPSE">PPSE</string>
     <string name="Visa">Visa</string>
+    <string name="jcb">JCB</string>
 </resources>

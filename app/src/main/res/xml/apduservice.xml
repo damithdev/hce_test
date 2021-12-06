@@ -9,7 +9,9 @@
         <!-- "2PAY.SYS.DDF01" is the name below in hex -->
         <aid-filter android:name="325041592E5359532E4444463031" android:description="@string/PPSE"/>
 
+        <!-- JCB MSD AID -->
+        <aid-filter android:name="A0000000651010" android:description="@string/jcb"/>
         <!-- VISA MSD AID -->
-        <aid-filter android:name="A0000000651010" android:description="@string/Visa"/>
+        <aid-filter android:name="A0000000031010" android:description="@string/Visa"/>
     </aid-group>
 </host-apdu-service>
