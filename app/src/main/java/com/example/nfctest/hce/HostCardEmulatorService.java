@@ -85,6 +85,9 @@ public class HostCardEmulatorService extends HostApduService {
 
 
     private void initCardData(){
+
+
+
         cardData = new CardData(
                 "325041592E5359532E4444463031",
                 "A0000000651010",
